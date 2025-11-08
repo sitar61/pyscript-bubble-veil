@@ -1,52 +1,106 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8" />
-    <title>PyScript Veil Demo</title>
-    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
-    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
-</head>
-<body>
-    <h3>PyScript Veil Demo</h3>
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+   <meta charset="UTF-8"> 
+   <title>PyScript Veil Demo</title> 
+   <!-- PyScript CSS & JS --> 
+   <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" /> 
+   <script defer src="https://pyscript.net/latest/pyscript.js"></script> 
+   <style> 
+       body { 
+           font-family: sans-serif; 
+           padding: 20px; 
+       } 
+       label { 
+           display: block; 
+           margin-top: 15px; 
+       } 
+       input[type="range"] { 
+           width: 100%; 
+       } 
+       #veil_output { 
+           margin-top: 15px; 
+           font-weight: bold; 
+           background-color: #f2f2f2; 
+           padding: 10px; 
+           border-radius: 5px; 
+       } 
+   </style> 
+</head> 
+<body> 
+   <h3>PyScript Veil Demo</h3> 
+ 
+   <label for="veil_slider">Veil Level (0-100):</label> 
+   <input id="veil_slider" type="range" min="0" max="100" value="50" /> 
+ 
+   <label for="veil_input">Veil Size (integer):</label> 
+   <input id="veil_input" type="number" value="7" min="1" /> 
+ 
+   <div id="veil_output">Loading...</div> 
+ 
+   <py-script> 
+from js import document, window 
+from pyodide.ffi import create_proxy 
+ 
+# The function that generates the "veil" message 
+def echo_veil(veil_level=50, veil_size=7): 
+   if veil_level >= 80: 
+       return f"Veil Locked: Echo Roars—{veil_size} Veils Entwine Test Light." 
+   elif veil_level >= 50: 
+       return f"Threshold Crests: {veil_size} Veils Yearn for Dawn's Surge." 
+   else: 
+       return f"Hush of Mock Awakening: {veil_size} Veils Call the Test Mane." 
+ 
+# Setup function to attach event listeners 
+def setup(): 
+   slider = document.getElementById("veil_slider") 
+   input_box = document.getElementById("veil_input") 
+   output = document.getElementById("veil_output") 
+ 
+   def on_input_change(event): 
+       level = int(slider.value) 
+       size = int(input_box.value) 
+       output.innerText = echo_veil(level, size) 
+ 
+   slider.addEventListener("input", create_proxy(on_input_change)) 
+   input_box.addEventListener("input", create_proxy(on_input_change)) 
+ 
+   # Initialize output 
+   on_input_change(None) 
+ 
+# Run setup after DOM is ready 
+window.addEventListener("DOMContentLoaded", create_proxy(setup)) 
+   </py-script> 
+</body> 
+</html> 
+ 
+ 
 
-    <label for="veil_slider">Veil Level (0-100):</label>
-    <input id="veil_slider" type="range" min="0" max="100" value="50" />
+Step 2: Host on Netlify 
 
-    <label for="veil_input">Veil Size (integer):</label>
-    <input id="veil_input" type="number" value="7" min="1" />
+Go to https://www.netlify.com and sign up/log in. 
 
-    <div id="veil_output" style="margin-top: 15px; font-weight: bold;"></div>
+Click “Add new site” → “Deploy manually”. 
 
-    <py-script>
-from js import document, window
-from pyodide.ffi import create_proxy
+Drag your index.html into the upload box. 
 
-def echo_veil(veil_level=50, veil_size=7):
-    if veil_level >= 80:
-        return f"Veil Locked: Echo Roars—{veil_size} Veils Entwine Test Light. Cascade the Pride\'s Mock Legacy."
-    elif veil_level >= 50:
-        return f"Threshold Crests: Breathe the Mock Green; {veil_size} Veils Yearn for Dawn\'s Surge. Test Eternal."
-    else:
-        return f"Hush of Mock Awakening: Anchor the Roots; {veil_size} Veils Call the Test Mane. Rise Unshadowed."
+Netlify will give you a live URL, e.g., 
 
-def setup():
-    slider = document.getElementById("veil_slider")
-    input_box = document.getElementById("veil_input")
-    output = document.getElementById("veil_output")
+https://your-demo-site.netlify.app/ 
+ 
+ 
 
-    def on_input_change(event):
-        level = int(slider.value)
-        size = int(input_box.value)
-        output.innerText = echo_veil(level, size)
+Step 3: Embed in Bubble 
 
-    slider.addEventListener("input", create_proxy(on_input_change))
-    input_box.addEventListener("input", create_proxy(on_input_change))
+Open your Bubble editor. 
 
-    # Initialize on load
-    on_input_change(None)
+Drag a HTML element onto the page. 
 
-# Wait for DOM to fully load
-window.addEventListener("DOMContentLoaded", create_proxy(setup))
-    </py-script>
-</body>
-</html>
+Paste this iframe code (replace URL with your Netlify URL): 
+
+<iframe  
+   src="https://your-demo-site.netlify.app/"  
+   style="width:100%; height:500px; border:none;"  
+   frameborder="0"  
+   scrolling="no"> 
+</iframe> 
