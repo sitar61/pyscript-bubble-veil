@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta charset="UTF-8" />
     <title>PyScript Veil Demo</title>
     <script defer src="https://pyscript.net/latest/pyscript.js"></script>
     <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
-  </head>
-  <body>
+</head>
+<body>
     <h3>PyScript Veil Demo</h3>
 
     <label for="veil_slider">Veil Level (0-100):</label>
@@ -18,7 +18,7 @@
     <div id="veil_output" style="margin-top: 15px; font-weight: bold;"></div>
 
     <py-script>
-from js import document
+from js import document, window
 from pyodide.ffi import create_proxy
 
 def echo_veil(veil_level=50, veil_size=7):
@@ -29,16 +29,24 @@ def echo_veil(veil_level=50, veil_size=7):
     else:
         return f"Hush of Mock Awakening: Anchor the Roots; {veil_size} Veils Call the Test Mane. Rise Unshadowed."
 
-def on_input_change(event):
-    level = int(document.getElementById("veil_slider").value)
-    size = int(document.getElementById("veil_input").value)
-    result = echo_veil(level, size)
-    document.getElementById("veil_output").innerText = result
+def setup():
+    slider = document.getElementById("veil_slider")
+    input_box = document.getElementById("veil_input")
+    output = document.getElementById("veil_output")
 
-document.getElementById("veil_slider").addEventListener("input", create_proxy(on_input_change))
-document.getElementById("veil_input").addEventListener("input", create_proxy(on_input_change))
+    def on_input_change(event):
+        level = int(slider.value)
+        size = int(input_box.value)
+        output.innerText = echo_veil(level, size)
 
-on_input_change(None)
+    slider.addEventListener("input", create_proxy(on_input_change))
+    input_box.addEventListener("input", create_proxy(on_input_change))
+
+    # Initialize on load
+    on_input_change(None)
+
+# Wait for DOM to fully load
+window.addEventListener("DOMContentLoaded", create_proxy(setup))
     </py-script>
-  </body>
+</body>
 </html>
